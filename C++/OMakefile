@@ -1,0 +1,40 @@
+.PHONY: all clean
+.DEFAULT: all
+
+# program include directory
+INCLUDE_DIR=./
+
+# progrm source file directory
+SRC_DIR=./
+
+# program name
+PROGRAM_NAME=glfw
+
+CXXFLAGS += -O2 -Wall
+ASFLAGS +=
+LDFLAGS +=
+INCLUDES += $(dir $(INCLUDE_DIR) $(SRC_DIR))
+
+
+#
+CXXFILES[] = $(removesuffix $(filter %.cpp, $(ls R, $(SRC_DIR))))
+CXXProgram($(PROGRAM_NAME), $(CXXFILES))
+
+
+# recursive omake
+foreach(d, $(subdirs P, $(SRC_DIR)))
+	.SUBDIRS: $(d)
+		if $(file-exists OMakefile)
+			include OMakefile
+		else
+			clean:
+				rm -f *.o
+
+
+clean:
+	rm -f $(PROGRAM_NAME)$(EXE)
+
+all: $(PROGRAM_NAME)$(EXE)
+
+
+
